@@ -1,0 +1,191 @@
+#include "main.h"
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+UART_HandleTypeDef huart1;
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART1_UART_Init(void);
+void dot(){
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+	HAL_Delay(500);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+	HAL_Delay(500);
+}
+void dash(){
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+	HAL_Delay(1500);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+	HAL_Delay(500);
+}
+void gap(){
+	HAL_Delay(1500); //Delay between each character
+}
+void A(){
+	dot();dash();
+	gap();
+}
+void B(){
+	dash();
+	for(int i=0;i<3;i++){dot();}
+	gap();
+}
+void C(){
+	dash();dot();dash();dot();
+	gap();
+}
+void D(){
+	dash();dot();dot();
+	gap();
+}
+void E(){
+	dot();
+	gap();
+}
+void F(){
+	dot();dot();dash();dot();
+	gap();
+}
+void G(){
+	dash();dash();dot();
+	gap();
+}
+void H(){
+	for(int i=0;i<4;i++){dot();}
+	gap();
+}
+void I(){
+	dot();dot();
+	gap();
+}
+void J(){
+	dot();for(int i=0;i<3;i++){dash();}
+	gap();
+}
+void K(){
+	dash();dot();dash();
+	gap();
+}
+void L(){
+	dot();dash();dot();dot();
+	gap();
+}
+void M(){
+	dash();dash();
+	gap();
+}
+void N(){
+	dash();dot();
+	gap();
+}
+void O(){
+	for(int i=0;i<3;i++){dash();}
+	gap();
+}
+void P(){
+	dot();dash();dash();dot();
+	gap();
+}
+void Q(){
+	dash();dash();dot();dash();
+	gap();
+}
+void R(){
+	dot();dash();dot();
+	gap();
+}
+void S(){
+	for(int i=0;i<3;i++)dot();
+	gap();
+}
+void T(){
+	dash();
+	gap();
+}
+void U(){
+	for(int i=0;i<2;i++) dot();
+	dash();
+	gap();
+}
+void V(){
+	for(int i=0;i<3;i++) dot();
+	dash();
+	gap();
+}
+void W(){
+	dot();
+	for(int i=0;i<2;i++) dash();
+	gap();
+}
+void X(){
+	dash();dot();dot();dash();
+	gap();
+}
+void Y(){
+	dash();dot();dash();dash();
+	gap();
+}
+void Z(){
+	dash();dash();dot();dot();
+	gap();
+}
+
+
+
+
+int main(void)
+{
+	char receivedData[20]; //Array to store input
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_USART1_UART_Init();
+  while (1)
+  {
+	  memset(receivedData, 0, sizeof(receivedData)); //To clear buffer
+	  HAL_UART_Receive(&huart1,(uint8_t*)receivedData, 20, 1000); //Take input from UNO
+	  for(int i=0;i<strlen(receivedData);i++){ 
+	  	   		 receivedData[i]=toupper(receivedData[i]); //Convert all character to uppercase
+	  }
+	 const char delim[] = " ";  // delimiter is a space character
+	 char *token;
+
+	 token = strtok(receivedData, delim); //Get the first word
+	 //Call respective function to blink LED
+	 while (token!= NULL) {
+		 for(int i=0;i<strlen(token);i++){
+	   		 switch(token[i]){
+	   		 case 'A': A();break;
+	   		 case 'B': B();break;
+	   		 case 'C': C();break;
+	   		 case 'D': D();break;
+	   		 case 'E': E();break;
+	   		 case 'F': F();break;
+	   		 case 'G': G();break;
+	   		 case 'H': H();break;
+	   		 case 'I': I();break;
+	   		 case 'J': J();break;
+	   		 case 'K': K();break;
+	   		 case 'L': L();break;
+	   		 case 'M': M();break;
+	   		 case 'N': N();break;
+	   		 case 'O': O();break;
+	   		 case 'P': P();break;
+	   		 case 'Q': Q();break;
+	   		 case 'R': R();break;
+	   		 case 'S': S();break;
+	   		 case 'T': T();break;
+	   		 case 'U': U();break;
+	   		 case 'V': V();break;
+	   		 case 'W': W();break;
+	   		 case 'X': X();break;
+	   		 case 'Y': Y();break;
+	   		 case 'Z': Z();break;
+	   		 }
+		 }
+	   token = strtok(NULL, delim);
+	   HAL_Delay(3000); //Delay after a word
+	 }
+  }
+}
